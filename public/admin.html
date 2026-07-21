@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>پنل مدیریت | معین فرامرزی</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300..900&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="/assets/style.css" />
+</head>
+<body>
+  <div class="admin-shell">
+    <div style="margin-bottom:28px;">
+      <a href="/" class="mono" style="color:var(--muted); font-size:13px;">← بازگشت به سایت</a>
+    </div>
+
+    <!-- ورود -->
+    <div class="admin-card" id="loginCard">
+      <div class="admin-title">ورود به پنل مدیریت</div>
+      <div class="admin-sub">برای افزودن یا حذف نمونه‌کارها، رمز عبور را وارد کنید</div>
+      <div id="loginMsg"></div>
+      <form id="loginForm">
+        <div class="field">
+          <label>رمز عبور</label>
+          <input type="password" id="password" required autocomplete="current-password" />
+        </div>
+        <button class="btn" type="submit">ورود</button>
+      </form>
+    </div>
+
+    <!-- افزودن نمونه‌کار -->
+    <div class="admin-card hidden" id="uploadCard">
+      <div class="admin-title">افزودن نمونه‌کار جدید</div>
+      <div class="admin-sub">فایل ویدیو + عنوان و توضیح کوتاه را وارد کنید</div>
+      <div id="uploadMsg"></div>
+      <form id="uploadForm">
+        <div class="field">
+          <label>عنوان نمونه‌کار</label>
+          <input type="text" id="title" required placeholder="مثلاً پروژه معرفی موسسه کنکوری" />
+        </div>
+        <div class="field">
+          <label>توضیح کوتاه (اختیاری)</label>
+          <textarea id="description" placeholder="یک خط درباره‌ی این پروژه"></textarea>
+        </div>
+        <div class="field">
+          <label>فایل ویدیو (mp4, webm, mov)</label>
+          <input type="file" id="video" accept="video/mp4,video/webm,video/quicktime" required />
+        </div>
+        <button class="btn" type="submit" id="uploadBtn">آپلود نمونه‌کار</button>
+      </form>
+    </div>
+
+    <!-- لیست فعلی -->
+    <div class="admin-card hidden" id="listCard">
+      <div class="admin-title">نمونه‌کارهای فعلی</div>
+      <div id="projectList"></div>
+    </div>
+  </div>
+
+  <script src="/assets/admin.js"></script>
+</body>
+</html>
