@@ -92,7 +92,7 @@ function observeReveal(root) {
 }
 observeReveal();
 
-// lazy play for a clip stage element
+// lazy play for a clip stage element (فقط برای ویدیوها)
 function wireClipStage(stage) {
   stage.addEventListener('click', function () {
     if (stage.classList.contains('playing')) return;
@@ -125,14 +125,21 @@ function renderProjects(list) {
 
   grid.innerHTML = list.map(function (p, i) {
     var num = String(i + 1).padStart(2, '0');
+    var isImage = p.type === 'image';
+    var link = p.link || '';
+    var stageInner = isImage
+      ? '<img class="clip-img" src="' + p.url + '" alt="' + escapeHtml(p.title || '') + '" loading="lazy" />'
+      : (
+          '<div class="clip-poster">' +
+            '<div class="play-btn"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></div>' +
+          '</div>'
+        );
     return (
       '<article class="clip reveal">' +
         '<div class="clip-sprockets">' + '<i></i>'.repeat(10) + '</div>' +
         '<div class="clip-meta"><span>CLIP_' + num + '</span><span>' + escapeHtml((p.title || '').toUpperCase()) + '</span></div>' +
-        '<div class="clip-stage" data-src="' + p.url + '">' +
-          '<div class="clip-poster">' +
-            '<div class="play-btn"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></div>' +
-          '</div>' +
+        '<div class="clip-stage' + (isImage ? ' is-image' : '') + (isImage && link ? ' has-link' : '') + '" data-src="' + p.url + '"' + (isImage && link ? ' data-link="' + escapeHtml(link) + '"' : '') + '>' +
+          stageInner +
         '</div>' +
         '<div class="clip-body">' +
           '<h3 class="clip-title">' + escapeHtml(p.title) + '</h3>' +
@@ -142,7 +149,13 @@ function renderProjects(list) {
     );
   }).join('');
 
-  grid.querySelectorAll('.clip-stage').forEach(wireClipStage);
+  grid.querySelectorAll('.clip-stage:not(.is-image)').forEach(wireClipStage);
+  grid.querySelectorAll('.clip-stage.has-link').forEach(function (stage) {
+    stage.addEventListener('click', function () {
+      var link = stage.getAttribute('data-link');
+      if (link) window.open(link, '_blank', 'noopener');
+    });
+  });
   observeReveal(grid);
 }
 

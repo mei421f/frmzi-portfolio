@@ -32,7 +32,7 @@
     <!-- افزودن نمونه‌کار -->
     <div class="admin-card hidden" id="uploadCard">
       <div class="admin-title">افزودن نمونه‌کار جدید</div>
-      <div class="admin-sub">فایل ویدیو + عنوان و توضیح کوتاه را وارد کنید</div>
+      <div class="admin-sub">فایل ویدیو یا عکس + عنوان و توضیح کوتاه را وارد کنید</div>
       <div id="uploadMsg"></div>
       <form id="uploadForm">
         <div class="field">
@@ -44,8 +44,12 @@
           <textarea id="description" placeholder="یک خط درباره‌ی این پروژه"></textarea>
         </div>
         <div class="field">
-          <label>فایل ویدیو (mp4, webm, mov)</label>
-          <input type="file" id="video" accept="video/mp4,video/webm,video/quicktime" required />
+          <label>فایل (ویدیو: mp4, webm, mov — یا عکس: jpg, png, webp)</label>
+          <input type="file" id="media" accept="video/mp4,video/webm,video/quicktime,image/jpeg,image/png,image/webp" required />
+        </div>
+        <div class="field">
+          <label>لینک مقصد برای کلیک روی عکس (اختیاری)</label>
+          <input type="url" id="linkUrl" placeholder="https://example.com" />
         </div>
         <button class="btn" type="submit" id="uploadBtn">آپلود نمونه‌کار</button>
       </form>

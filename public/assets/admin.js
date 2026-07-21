@@ -54,18 +54,19 @@ uploadForm.addEventListener('submit', function (e) {
 
   var title = document.getElementById('title').value;
   var description = document.getElementById('description').value;
-  var fileInput = document.getElementById('video');
+  var fileInput = document.getElementById('media');
   var file = fileInput.files[0];
 
   if (!file) {
-    showMsg(uploadMsg, 'لطفاً یک فایل ویدیو انتخاب کنید', 'error');
+    showMsg(uploadMsg, 'لطفاً یک فایل ویدیو یا عکس انتخاب کنید', 'error');
     return;
   }
 
   var formData = new FormData();
   formData.append('title', title);
   formData.append('description', description);
-  formData.append('video', file);
+  formData.append('media', file);
+  formData.append('linkUrl', document.getElementById('linkUrl').value);
 
   uploadBtn.disabled = true;
   uploadBtn.textContent = 'در حال آپلود...';

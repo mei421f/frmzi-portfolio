@@ -5,15 +5,22 @@ const { readProjects, createProject, deleteProject } = require('../store');
 
 const router = express.Router();
 
-const ALLOWED_TYPES = ['video/mp4', 'video/webm', 'video/quicktime'];
-const MAX_SIZE = 150 * 1024 * 1024; // 150MB
+const ALLOWED_TYPES = [
+  'video/mp4',
+  'video/webm',
+  'video/quicktime',
+  'image/jpeg',
+  'image/png',
+  'image/webp',
+];
+const MAX_SIZE = 150 * 1024 * 1024; // 150MB (سقف مشترک؛ عکس‌ها معمولاً خیلی کوچک‌تر از این هستند)
 
 const upload = multer({
   storage: multer.memoryStorage(),
   limits: { fileSize: MAX_SIZE },
   fileFilter: (req, file, cb) => {
     if (!ALLOWED_TYPES.includes(file.mimetype)) {
-      return cb(new Error('فقط فایل ویدیویی (mp4, webm, mov) مجاز است'));
+      return cb(new Error('فقط فایل ویدیویی (mp4, webm, mov) یا عکس (jpg, png, webp) مجاز است'));
     }
     cb(null, true);
   },
@@ -29,6 +36,8 @@ router.get('/', async (req, res) => {
         title: p.title,
         description: p.description,
         url: p.video_url,
+        type: p.media_type || 'video',
+        link: p.link_url || null,
         createdAt: p.created_at,
       }))
     );
@@ -38,30 +47,36 @@ router.get('/', async (req, res) => {
   }
 });
 
-// افزودن نمونه‌کار جدید (فقط ادمین) — multipart/form-data با فیلد video
+// افزودن نمونه‌کار جدید (فقط ادمین) — multipart/form-data با فیلد media
 router.post('/', adminAuth, (req, res) => {
-  upload.single('video')(req, res, async (err) => {
+  upload.single('media')(req, res, async (err) => {
     if (err) return res.status(400).json({ message: err.message || 'خطا در آپلود فایل' });
-    if (!req.file) return res.status(400).json({ message: 'فایل ویدیو الزامی است' });
+    if (!req.file) return res.status(400).json({ message: 'فایل ویدیو یا عکس الزامی است' });
 
-    const { title, description } = req.body;
+    const { title, description, linkUrl } = req.body;
     if (!title) {
       return res.status(400).json({ message: 'عنوان نمونه‌کار الزامی است' });
+    }
+    if (linkUrl && !/^https?:\/\//i.test(linkUrl)) {
+      return res.status(400).json({ message: 'لینک باید با http:// یا https:// شروع شود' });
     }
 
     try {
       const project = await createProject({
         title,
         description,
-        videoBuffer: req.file.buffer,
-        videoOriginalName: req.file.originalname,
-        videoMimetype: req.file.mimetype,
+        linkUrl,
+        fileBuffer: req.file.buffer,
+        fileOriginalName: req.file.originalname,
+        fileMimetype: req.file.mimetype,
       });
       res.status(201).json({
         id: project.id,
         title: project.title,
         description: project.description,
         url: project.video_url,
+        type: project.media_type,
+        link: project.link_url || null,
         createdAt: project.created_at,
       });
     } catch (uploadErr) {
