@@ -22,7 +22,7 @@
 }
 
 *{ box-sizing: border-box; margin:0; padding:0; }
-html{ scroll-behavior: smooth; }
+html{ scroll-behavior: smooth; max-width: 100%; overflow-x: hidden; }
 @media (prefers-reduced-motion: reduce){
   html{ scroll-behavior: auto; }
   *{ animation-duration: 0.001ms !important; animation-iteration-count: 1 !important; transition-duration: 0.001ms !important; }
@@ -31,12 +31,12 @@ html{ scroll-behavior: smooth; }
 body{
   background: var(--bg);
   color: var(--text);
-  font-family: 'Vazirmatn', sans-serif;
+  font-family: 'Vazirmatn', Tahoma, 'Segoe UI', Arial, sans-serif;
   line-height: 1.9;
   overflow-x: hidden;
 }
 
-.mono{ font-family: 'JetBrains Mono', monospace; direction: ltr; unicode-bidi: isolate; }
+.mono{ font-family: 'JetBrains Mono', Consolas, 'Courier New', monospace; direction: ltr; unicode-bidi: isolate; }
 ::selection{ background: var(--teal); color: #06110f; }
 a{ color: inherit; text-decoration: none; }
 img{ max-width:100%; display:block; }
@@ -136,8 +136,9 @@ img{ max-width:100%; display:block; }
   background-image: repeating-linear-gradient(0deg, rgba(255,255,255,0.015) 0px, rgba(255,255,255,0.015) 1px, transparent 1px, transparent 3px);
 }
 .hero-hud{
-  display:inline-flex; align-items:center; gap:10px; color: var(--muted); font-size: 12.5px; margin-bottom: 42px;
-  border:1px solid var(--line); background: rgba(255,255,255,0.02); border-radius: 999px; padding: 8px 16px; width:fit-content;
+  display:inline-flex; flex-wrap: wrap; align-items:center; gap:8px 10px; color: var(--muted); font-size: 12.5px; margin-bottom: 42px;
+  border:1px solid var(--line); background: rgba(255,255,255,0.02); border-radius: 16px; padding: 8px 16px;
+  width:fit-content; max-width: 100%;
 }
 .hero-hud .sep{ color: var(--line); }
 .hero-kicker{ color: var(--teal); font-size: 13px; letter-spacing: .12em; margin-bottom: 18px; display:flex; align-items:center; gap:10px; }
@@ -170,6 +171,14 @@ h1.hero-name{
   background: var(--teal); animation: scrollbar 1.8s infinite ease-in-out;
 }
 @keyframes scrollbar{ 0%{ top:-34px } 100%{ top:34px } }
+
+@media (max-width: 640px){
+  .hero .wrap{ display:flex; flex-direction:column; align-items:center; text-align:center; }
+  .hero-hud{ margin-inline:auto; justify-content:center; }
+  .hero-kicker{ justify-content:center; }
+  .hero-actions{ justify-content:center; width:100%; }
+  .hero-scroll{ right:50%; transform:translateX(50%); }
+}
 
 /* ---------- sections ---------- */
 section{ padding: 120px 0; border-bottom: 1px solid var(--line-soft); scroll-margin-top: 70px; }
@@ -226,14 +235,14 @@ section{ padding: 120px 0; border-bottom: 1px solid var(--line-soft); scroll-mar
 .lower-third{
   position:relative; background: var(--surface); border: 1px solid var(--line); border-inline-start: 3px solid var(--teal);
   border-radius: var(--radius-lg); padding: 34px 30px; display:flex; flex-wrap:wrap; gap: 28px 44px;
-  align-items:center; justify-content:space-between; box-shadow: var(--shadow-lift);
+  align-items:center; justify-content:space-between; box-shadow: var(--shadow-lift); max-width: 100%;
 }
 .lt-name{ font-size: 1.4rem; font-weight:800; }
 .lt-role{ color: var(--muted); font-size: 13.5px; margin-top:4px; }
-.lt-links{ display:flex; flex-wrap:wrap; gap: 12px; }
-.lt-link{ display:flex; align-items:center; gap:9px; background: var(--surface-2); border:1px solid var(--line); border-radius: 9px; padding: 11px 16px; font-size: 14px; transition: border-color .18s, transform .18s var(--ease), background .18s; }
+.lt-links{ display:flex; flex-wrap:wrap; gap: 12px; max-width: 100%; }
+.lt-link{ display:flex; align-items:center; gap:9px; background: var(--surface-2); border:1px solid var(--line); border-radius: 9px; padding: 11px 16px; font-size: 14px; transition: border-color .18s, transform .18s var(--ease), background .18s; max-width: 100%; }
 .lt-link:hover{ border-color: var(--teal); transform: translateY(-2px); background: var(--surface-3); }
-.lt-link .mono{ color: var(--muted); font-size: 12px; }
+.lt-link .mono{ color: var(--muted); font-size: 12px; overflow-wrap: anywhere; word-break: break-word; }
 
 footer{ text-align:center; padding: 30px 0 50px; color: var(--muted); font-size: 12.5px; }
 
