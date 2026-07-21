@@ -13,7 +13,7 @@ const ALLOWED_TYPES = [
   'image/png',
   'image/webp',
 ];
-const MAX_SIZE = 150 * 1024 * 1024; // 150MB (سقف مشترک؛ عکس‌ها معمولاً خیلی کوچک‌تر از این هستند)
+const MAX_SIZE = 50 * 1024 * 1024; // 50MB — سقف فایل در پلن رایگان Supabase Storage
 
 const upload = multer({
   storage: multer.memoryStorage(),
@@ -25,7 +25,6 @@ const upload = multer({
     cb(null, true);
   },
 });
-
 // لیست عمومی نمونه‌کارها
 router.get('/', async (req, res) => {
   try {
@@ -50,7 +49,12 @@ router.get('/', async (req, res) => {
 // افزودن نمونه‌کار جدید (فقط ادمین) — multipart/form-data با فیلد media
 router.post('/', adminAuth, (req, res) => {
   upload.single('media')(req, res, async (err) => {
-    if (err) return res.status(400).json({ message: err.message || 'خطا در آپلود فایل' });
+    if (err) {
+      if (err.code === 'LIMIT_FILE_SIZE') {
+        return res.status(400).json({ message: 'حجم فایل بیشتر از حد مجاز (۵۰ مگابایت) است' });
+      }
+      return res.status(400).json({ message: err.message || 'خطا در آپلود فایل' });
+    }
     if (!req.file) return res.status(400).json({ message: 'فایل ویدیو یا عکس الزامی است' });
 
     const { title, description, linkUrl } = req.body;
