@@ -173,7 +173,7 @@ img{ max-width:100%; display:block; }
   width:fit-content; max-width: 100%;
 }
 .hero-hud .sep{ color: var(--line); }
-.hero-kicker{ color: var(--teal); font-size: 13px; letter-spacing: .12em; margin-bottom: 18px; display:flex; align-items:center; gap:10px; }
+.hero-kicker{ color: var(--teal); font-size: 13px; margin-bottom: 18px; display:flex; align-items:center; gap:10px; }
 .hero-kicker::before{ content:""; width: 28px; height:1px; background: var(--teal); display:inline-block; }
 h1.hero-name{
   font-size: clamp(2.6rem, 7vw, 5.4rem); font-weight: 800; letter-spacing: -0.01em; line-height: 1.12;
