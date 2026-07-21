@@ -1,0 +1,6 @@
+node_modules/
+.env
+backend/data/videos/*
+!backend/data/videos/.gitkeep
+backend/data/projects.json
+.DS_Store
