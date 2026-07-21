@@ -21,7 +21,7 @@ var yearEl = document.getElementById('year');
 if (yearEl) yearEl.textContent = new Date().getFullYear();
 
 // nav: active link + click-to-jump + mobile toggle + scroll progress
-var sections = ['hero', 'about', 'skills', 'reel', 'experience', 'contact']
+var sections = ['hero', 'about', 'skills', 'reel', 'tools', 'clients', 'team', 'order', 'contact']
   .map(function (id) { return { id: id, el: document.getElementById(id) }; })
   .filter(function (s) { return s.el; });
 

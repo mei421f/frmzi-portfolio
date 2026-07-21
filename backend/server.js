@@ -6,6 +6,7 @@ require('dotenv').config();
 const { ensureReady, VIDEOS_DIR } = require('./store');
 const authRoutes = require('./routes/auth');
 const projectRoutes = require('./routes/projects');
+const orderRoutes = require('./routes/orders');
 
 ensureReady();
 
@@ -15,6 +16,7 @@ app.use(express.json());
 
 app.use('/api/admin', authRoutes);
 app.use('/api/projects', projectRoutes);
+app.use('/api/orders', orderRoutes);
 
 // فایل‌های ویدیوی آپلودشده
 app.use('/uploads', express.static(VIDEOS_DIR));
