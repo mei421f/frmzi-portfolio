@@ -3,12 +3,9 @@ const cors = require('cors');
 const path = require('path');
 require('dotenv').config();
 
-const { ensureReady, VIDEOS_DIR } = require('./store');
 const authRoutes = require('./routes/auth');
 const projectRoutes = require('./routes/projects');
 const orderRoutes = require('./routes/orders');
-
-ensureReady();
 
 const app = express();
 app.use(cors());
@@ -18,8 +15,8 @@ app.use('/api/admin', authRoutes);
 app.use('/api/projects', projectRoutes);
 app.use('/api/orders', orderRoutes);
 
-// فایل‌های ویدیوی آپلودشده
-app.use('/uploads', express.static(VIDEOS_DIR));
+// نکته: ویدیوها دیگر روی دیسک سرور ذخیره نمی‌شوند؛ در Supabase Storage
+// نگهداری می‌شوند و URL عمومی آن‌ها مستقیماً در پاسخ /api/projects برمی‌گردد.
 
 // فرانت استاتیک (index.html + admin.html + assets)
 const PUBLIC_DIR = path.join(__dirname, '..', 'public');

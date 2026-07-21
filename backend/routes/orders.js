@@ -1,6 +1,5 @@
 const express = require('express');
-const crypto = require('crypto');
-const { readOrders, writeOrders } = require('../store');
+const { createOrder } = require('../store');
 
 const router = express.Router();
 
@@ -51,19 +50,21 @@ router.post('/', async (req, res) => {
     return res.status(400).json({ message: 'پر کردن نام، راه تماس، نوع خدمت و توضیحات الزامی است' });
   }
 
-  const order = {
-    id: crypto.randomUUID(),
+  const orderInput = {
     name: String(name).slice(0, 200),
     contact: String(contact).slice(0, 200),
     service: String(service).slice(0, 100),
     budget: budget ? String(budget).slice(0, 100) : '',
     message: String(message).slice(0, 3000),
-    createdAt: new Date().toISOString(),
   };
 
-  const list = readOrders();
-  list.push(order);
-  writeOrders(list);
+  let order;
+  try {
+    order = await createOrder(orderInput);
+  } catch (err) {
+    console.error('خطا در ذخیره سفارش:', err.message);
+    return res.status(500).json({ message: 'خطا در ثبت سفارش' });
+  }
 
   const sent = await sendToTelegram(order);
 
