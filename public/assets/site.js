@@ -21,7 +21,7 @@ var yearEl = document.getElementById('year');
 if (yearEl) yearEl.textContent = new Date().getFullYear();
 
 // nav: active link + click-to-jump + mobile toggle + scroll progress
-var sections = ['hero', 'about', 'skills', 'reel', 'tools', 'clients', 'team', 'faq', 'order', 'contact']
+var sections = ['hero', 'about', 'skills', 'reel', 'tools', 'clients', 'team', 'order', 'contact']
   .map(function (id) { return { id: id, el: document.getElementById(id) }; })
   .filter(function (s) { return s.el; });
 
@@ -85,8 +85,7 @@ var revealIO = ('IntersectionObserver' in window)
 
 function observeReveal(root) {
   var items = (root || document).querySelectorAll('.reveal:not(.in)');
-  items.forEach(function (el, i) {
-    el.style.setProperty('--reveal-delay', Math.min(i, 6) * 70 + 'ms');
+  items.forEach(function (el) {
     if (revealIO) revealIO.observe(el);
     else el.classList.add('in');
   });
@@ -167,98 +166,3 @@ fetch('/api/projects')
     var grid = document.getElementById('reelGrid');
     if (grid) grid.innerHTML = '<p class="reel-empty">در حال حاضر امکان بارگذاری نمونه‌کارها نیست.</p>';
   });
-
-// ===== custom cinematic cursor (fine pointer devices only) =====
-(function () {
-  var isFine = window.matchMedia && window.matchMedia('(hover:hover) and (pointer:fine)').matches;
-  var reduceMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  if (!isFine || reduceMotion) return;
-
-  document.documentElement.classList.add('has-custom-cursor');
-  var dot = document.getElementById('cursorDot');
-  var ring = document.getElementById('cursorRing');
-  if (!dot || !ring) return;
-
-  var mouseX = 0, mouseY = 0, ringX = 0, ringY = 0;
-  window.addEventListener('mousemove', function (e) {
-    mouseX = e.clientX; mouseY = e.clientY;
-    dot.style.transform = 'translate(' + mouseX + 'px,' + mouseY + 'px) translate(-50%,-50%)';
-  });
-
-  function loop() {
-    ringX += (mouseX - ringX) * 0.18;
-    ringY += (mouseY - ringY) * 0.18;
-    ring.style.transform = 'translate(' + ringX + 'px,' + ringY + 'px) translate(-50%,-50%)';
-    requestAnimationFrame(loop);
-  }
-  requestAnimationFrame(loop);
-
-  var hoverables = 'a, button, .clip-stage, .faq-q, input, textarea, select, .nav-link';
-  document.addEventListener('mouseover', function (e) {
-    if (e.target.closest(hoverables)) ring.classList.add('hover');
-  });
-  document.addEventListener('mouseout', function (e) {
-    if (e.target.closest(hoverables)) ring.classList.remove('hover');
-  });
-})();
-
-// ===== subtle hero parallax on scroll =====
-(function () {
-  var hero = document.getElementById('hero');
-  if (!hero) return;
-  var reduceMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  if (reduceMotion) return;
-
-  var layers = hero.querySelectorAll('.hero-hud, .hero-kicker, .hero-name, .hero-role, .hero-actions');
-  var ticking = false;
-
-  function update() {
-    ticking = false;
-    var rect = hero.getBoundingClientRect();
-    if (rect.bottom < 0 || rect.top > window.innerHeight) return;
-    var progress = Math.min(Math.max(-rect.top / (rect.height || 1), 0), 1);
-    layers.forEach(function (el, i) {
-      var depth = (i + 1) * 6;
-      el.style.transform = 'translateY(' + (progress * depth) + 'px)';
-      el.style.opacity = String(1 - progress * 0.5);
-    });
-  }
-  document.addEventListener('scroll', function () {
-    if (!ticking) { requestAnimationFrame(update); ticking = true; }
-  }, { passive: true });
-  update();
-})();
-
-// ===== FAQ accordion =====
-document.querySelectorAll('.faq-item').forEach(function (item) {
-  var btn = item.querySelector('.faq-q');
-  var answer = item.querySelector('.faq-a');
-  if (!btn || !answer) return;
-  btn.addEventListener('click', function () {
-    var isOpen = item.classList.contains('open');
-    document.querySelectorAll('.faq-item.open').forEach(function (other) {
-      if (other !== item) {
-        other.classList.remove('open');
-        other.querySelector('.faq-q').setAttribute('aria-expanded', 'false');
-        other.querySelector('.faq-a').style.maxHeight = null;
-      }
-    });
-    item.classList.toggle('open', !isOpen);
-    btn.setAttribute('aria-expanded', String(!isOpen));
-    answer.style.maxHeight = !isOpen ? answer.scrollHeight + 'px' : null;
-  });
-});
-
-// ===== floating quick-contact toggle =====
-(function () {
-  var wrap = document.getElementById('quickContact');
-  var toggle = document.getElementById('quickContactToggle');
-  if (!wrap || !toggle) return;
-  toggle.addEventListener('click', function () {
-    var open = wrap.classList.toggle('open');
-    toggle.setAttribute('aria-expanded', open ? 'true' : 'false');
-  });
-  document.addEventListener('click', function (e) {
-    if (!wrap.contains(e.target)) wrap.classList.remove('open');
-  });
-})();
